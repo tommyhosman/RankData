@@ -1,6 +1,6 @@
 # RankData
 ```
-rank = RankData(data, setInvalidToNanRank)
+rank = RankData(data, alongDim, invalidRank)
 ```
 
 Matlab function to rank each element of data.
@@ -14,10 +14,10 @@ Inspired by procrastination and this [pick-of-the-week blog post](https://blogs.
 
 ## Params
 
-`setInvalidToNanRank` [default `false`] 
+ - `alongDim` [default `[]`] - If empty, rank across all entries. If not empty, rank along entries for the specified dim
+ - `invalidRank` [default `NaN`] - Value invalid entries are set to.
 
- - If false, invalid entries are set to `-1`. 
- - If true, invalid entries are set to `NaN`. 
+ 
 
 
 ## Examples
@@ -37,7 +37,6 @@ Shows how repeated and invalid entries are handled.
 ```
 data = [10 nan 11 nan nan 1 2 5 1 7];
 rank = RankData(data)
-rankNaN = RankData(data, true)
 ```
 
 Example 3
@@ -51,4 +50,14 @@ data = discretize(data,linspace(0,1,10),'categorical');
 rank = RankData(data)
 ```
 
+Example 4
 
+Output similar to tiedrank. While we demonstrate matched results, RankData can handle non numeric entries.
+
+```
+data = rand(3,4,2);
+data(3,:,:) = data(2,:,:); % Match entries to force ties
+alongDim = 1;
+rank = tiedrank(RankData(data,alongDim));
+isequal(rank,tiedrank(data))
+```
